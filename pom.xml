@@ -5,27 +5,102 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fr.maesia.mob</groupId>
-    <artifactId>MaesiaMob</artifactId>
+    <artifactId>maesia-mob</artifactId>
     <version>1.5.0</version>
     <packaging>jar</packaging>
 
     <name>MaesiaMob</name>
+    <description>Create, edit entities as you see fit!</description>
+    <url>https://github.com/Maesia-Kingdoms/MaesiaMob</url>
+
+    <organization>
+        <name>Maesia-Kingdoms</name>
+        <url>https://github.com/Maesia-Kingdomse</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>Novah95</id>
+            <name>Novah</name>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>MrCubee</name>
+            <email>contact@mrcubee.fr</email>
+            <url>https://github.com/MrCubee</url>
+        </contributor>
+    </contributors>
 
     <properties>
-        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <!--suppress UnresolvedMavenProperty -->
+        <commit.version>${git.branch.name}-${git.commit.last.sha1_short}</commit.version>
+        <plugin.version>${project.version} (git ${commit.version})</plugin.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>mrcubee-public</id>
+            <url>https://nexus.mrcubee.net/repository/minecraft/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.18.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mrcubee-public</id>
+            <url>https://nexus.mrcubee.net/repository/minecraft/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
+        <defaultGoal>clean package</defaultGoal>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>9</source>
+                    <target>9</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>fr.mrcubee.maven</groupId>
+                <artifactId>gitplugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>parse</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -44,40 +119,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
-
-    <repositories>
-        <repository>
-            <id>spigotmc-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-    </repositories>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.18.1-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>fr.maesia.plugins</groupId>
-            <artifactId>skils</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>C:/Users/novah/IdeaProjects/MaesiaSkils/target/skils-1.0-SNAPSHOT.jar</systemPath>
-        </dependency>
-    </dependencies>
 
 </project>
