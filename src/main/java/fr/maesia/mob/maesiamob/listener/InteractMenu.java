@@ -7,7 +7,6 @@ import fr.maesia.mob.maesiamob.Mob.Mobs;
 import fr.maesia.mob.maesiamob.Mob.rangs.Rang;
 import fr.maesia.mob.maesiamob.utils.PotionEffectItem.ItemtoPotion;
 import fr.maesia.mob.maesiamob.utils.TchatInteract.TchatInteract;
-import maesia.skils.farms.FEC;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -117,6 +116,8 @@ public class InteractMenu implements Listener {
                     }
                 }
                 Mobs.mobsListUuid.remove(mobs);
+                /*
+                TODO: Fix skills dependency.
                 if (Bukkit.getPluginManager().getPlugin("Skils") != null){
                     if (!FEC.hunters.isEmpty() || !FEC.monster.isEmpty()){
                         FEC fec = FEC.getFECMobs(mobs, FEC.hunters);
@@ -129,6 +130,7 @@ public class InteractMenu implements Listener {
                         }
                     }
                 }
+                 */
                 Mobs.removeMobs(mobs);
                 assert mobs != null;
                 p.openInventory(gui.onMobMoreGUI(p, mobs.getRank(), true));

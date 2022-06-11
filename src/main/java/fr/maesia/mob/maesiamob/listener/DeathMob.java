@@ -3,7 +3,6 @@ package fr.maesia.mob.maesiamob.listener;
 import fr.maesia.mob.maesiamob.Mob.Mobs;
 
 import fr.maesia.mob.maesiamob.Mob.rangs.RangsLoots;
-import maesia.skils.farms.FEC;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
@@ -44,12 +43,15 @@ public class DeathMob implements Listener {
                 ondropsmobs(e.getEntity().getLocation(), e.getEntity().getUniqueId(), 90, looting);
 
             }else {
+                /*
+                TODO: Fix skills dependency.
                 if (!FEC.isExistMob(FEC.monster, lootTable.get(e.getEntity().getUniqueId()))){
                     ondropsmobs(e.getEntity().getLocation(), e.getEntity().getUniqueId(), 90, looting);
                 }
                 if (!FEC.isExistMob(FEC.hunters, lootTable.get(e.getEntity().getUniqueId()))){
                     ondropsmobs(e.getEntity().getLocation(), e.getEntity().getUniqueId(), 90, looting);
                 }
+                 */
             }
         }
         if (deatheffect.isEmpty())return;

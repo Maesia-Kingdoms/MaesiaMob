@@ -1,14 +1,14 @@
-name: MaesiaMob
-version: '${project.version}'
+name: ${project.name}
+description: ${project.description}
+website: ${project.url}
+version: ${plugin.version}
 main: fr.maesia.mob.maesiamob.MaesiaMob
 api-version: 1.18
 authors: [ novah95 ]
-softdepend:
-  - Skils
 commands:
-  MoreMob:
-    description: Création de nouveau mobs.
+  moremob:
+    description: Creation of new monsters.
     aliases: mm
-  Bestiaire:
-    description: List des créatures.
+  bestiaire:
+    description: List of creatures.
     aliases: b
