@@ -791,6 +791,7 @@ public class InteractMenu implements Listener {
                     p.openInventory(gui.onDeathMenuSpawnEditCountMob(m));
                 }
 
+
                 return;
             }
 
