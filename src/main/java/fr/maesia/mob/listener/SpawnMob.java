@@ -4,6 +4,7 @@ import fr.maesia.mob.MaesiaMob;
 import fr.maesia.mob.mob.Mobs;
 import fr.maesia.mob.mob.rangs.Rang;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -14,6 +15,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
@@ -126,8 +128,9 @@ public class SpawnMob implements Listener {
 
         Entity entity = Objects.requireNonNull(loc.getWorld()).spawnEntity(loc, mobs.getEntityType());
 
+        entity.getPersistentDataContainer().set(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING, mobs.getId().toString());
 
-        Mobs.mobsListUuid.get(mobs).add(entity.getUniqueId());
+        Mobs.mobsListUuid.add(entity.getUniqueId());
 
         LivingEntity newmob = (LivingEntity) entity;
         SpawnMob.onCustomMob(newmob, mobs.getRank().getColor() + mobs.getName(), entity.getUniqueId(), mobs.getHealth(), mobs.getDamage(), mobs.getSpeed(), mobs.getAttackspeed());
@@ -139,10 +142,6 @@ public class SpawnMob implements Listener {
 
         if (mobs.getEntityType().equals(EntityType.PILLAGER) || mobs.getEntityType().equals( EntityType.GIANT)){
             CombatsMobs.Combatreact.put(entity.getUniqueId(), mobs);
-        }
-
-        if (mobs.getEffectMobsDamage().isActif()) {
-            CombatsMobs.Combateffect.put(entity.getUniqueId(), mobs);
         }
 
         if (!mobs.getLoots().isEmpty()) {
@@ -167,7 +166,7 @@ public class SpawnMob implements Listener {
 
         }
         if (mobs.getPassager() != null){
-            Mobs passager = Mobs.getMobsUuid(mobs.getPassager());
+            Mobs passager = Mobs.getMobs(mobs.getPassager());
             if (passager == null) {
                 mobs.setPassager(null);
                 return entity;

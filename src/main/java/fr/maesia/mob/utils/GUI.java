@@ -1,10 +1,11 @@
 package fr.maesia.mob.utils;
 
-import fr.maesia.mob.mob.Mobs;
+
 import fr.maesia.mob.MaesiaMobFiles.Messages.Messages;
+import fr.maesia.mob.listener.InteractMenu;
+import fr.maesia.mob.mob.Mobs;
 import fr.maesia.mob.mob.rangs.Rang;
 import fr.maesia.mob.mob.rangs.RangsLoots;
-import fr.maesia.mob.listener.InteractMenu;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -696,7 +697,7 @@ public class GUI {
         lore.add("");
         if (mobs.getPassager() !=null){
 
-            lore.add(ChatColor.GRAY+"Montures actuels: "+ChatColor.YELLOW+ Objects.requireNonNull(Mobs.getMobsUuid(mobs.getPassager())).getName());
+            lore.add(ChatColor.GRAY+"Montures actuels: "+ChatColor.YELLOW+ Objects.requireNonNull(Mobs.getMobs(mobs.getPassager())).getName());
         }else {
             lore.add(ChatColor.GRAY+"Montures actuels: "+ChatColor.YELLOW+ "Aucun");
         }

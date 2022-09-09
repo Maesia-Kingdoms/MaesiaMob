@@ -1,7 +1,7 @@
-package fr.maesia.mob.maesiamob.utils.CustomEvents;
+package fr.maesia.mob.utils.CustomEvents;
 
 
-import fr.maesia.mob.maesiamob.Mob.Mobs;
+import fr.maesia.mob.mob.Mobs;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

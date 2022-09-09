@@ -1,10 +1,13 @@
 package fr.maesia.mob.listener;
 
+import fr.maesia.mob.MaesiaMob;
 import fr.maesia.mob.mob.Mobs;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.HashMap;
@@ -13,7 +16,6 @@ import java.util.UUID;
 
 public class CombatsMobs implements Listener {
 
-    public static HashMap<UUID, Mobs> Combateffect = new HashMap<>();
     public static HashMap<UUID, Mobs> Combatreact = new HashMap<>();
     @EventHandler
     public void onDamageByMobsCustom(EntityDamageByEntityEvent e){
@@ -32,18 +34,23 @@ public class CombatsMobs implements Listener {
 
         }
 
-        if(Combateffect.containsKey(e.getDamager().getUniqueId()) && e.getEntity() instanceof Player){
+        if(!e.getDamager().getPersistentDataContainer().has(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING)) return;
+        String key =  e.getEntity().getPersistentDataContainer().get(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING);
+        if(key == null) return;
+        UUID uuid = UUID.fromString(key);
+        Mobs mobs = Mobs.getMobs(uuid);
+        if(mobs == null)return;
+
+        if( mobs.getEffectMobsDamage().isActif() && e.getEntity() instanceof Player){
             Player victim = (Player) e.getEntity();
 
-            Mobs attacker = Combateffect.get(e.getDamager().getUniqueId());
-
-            int time = attacker.getEffectMobsDamage().getDuration();
-            PotionEffect potionEffect = new PotionEffect(attacker.getEffectMobsDamage().getPotionEffect(),time , attacker.getEffectMobsDamage().getPower(), false, false);
+            int time = mobs.getEffectMobsDamage().getDuration();
+            PotionEffect potionEffect = new PotionEffect(mobs.getEffectMobsDamage().getPotionEffect(),time , mobs.getEffectMobsDamage().getPower(), false, false);
             if (time > -1 ){
-                victim.addPotionEffect(potionEffect.getType().createEffect(time*20, attacker.getEffectMobsDamage().getPower()-1));
+                victim.addPotionEffect(potionEffect.getType().createEffect(time*20, mobs.getEffectMobsDamage().getPower()-1));
 
             }else {
-                victim.addPotionEffect(potionEffect.getType().createEffect(99999999*20, attacker.getEffectMobsDamage().getPower()-1));
+                victim.addPotionEffect(potionEffect.getType().createEffect(99999999*20, mobs.getEffectMobsDamage().getPower()-1));
             }
 
         }

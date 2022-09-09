@@ -1,15 +1,19 @@
 package fr.maesia.mob.listener;
 
+import fr.maesia.mob.MaesiaMob;
+import fr.maesia.mob.MaesiaMobFiles.Messages.Messages;
+import fr.maesia.mob.mob.DeathEffect;
 import fr.maesia.mob.mob.Mobs;
 import fr.maesia.mob.mob.rangs.Rang;
 import fr.maesia.mob.mob.rangs.RangsLoots;
+import fr.maesia.mob.utils.CustomEvents.RemoveMobEvent;
 import fr.maesia.mob.utils.GUI;
-import fr.maesia.mob.MaesiaMobFiles.Messages.Messages;
 import fr.maesia.mob.utils.PotionEffectItem.ItemtoPotion;
 import fr.maesia.mob.utils.TchatInteract.TchatInteract;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -21,12 +25,15 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+
+
+import static fr.maesia.mob.utils.GUI.onSkull;
 
 public class InteractMenu implements Listener {
 
@@ -97,25 +104,29 @@ public class InteractMenu implements Listener {
             if (Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.PLAYER)) return;
             String name = Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(e.getView().getItem(2)).getItemMeta()).getDisplayName().replace(ChatColor.GREEN + "", ""));
             Mobs mobs = Mobs.getMobs(name);
+            if(mobs == null)return;
             if (it.getType().equals(Material.RED_CONCRETE)) {
+                RemoveMobEvent removeMobEvent = new RemoveMobEvent(mobs);
+                Bukkit.getServer().getPluginManager().callEvent(removeMobEvent);
+                if(removeMobEvent.isCancelled()) return;
                 p.closeInventory();
                 if (!Mobs.mobsListUuid.isEmpty()){
-                    for(Map.Entry<Mobs, List<UUID>> target : Mobs.mobsListUuid.entrySet()){
-                        if (target.getKey().equals(mobs)){
-                            for (UUID remove: target.getValue()){
-                                DeathMob.deatheffect.remove(remove);
-                                CombatsMobs.Combateffect.remove(remove);
-                                Entity entity = Bukkit.getEntity(remove);
-                                if (entity != null){
-                                    entity.remove();
-                                }
-                            }
-                        }
+                    for(UUID target : Mobs.mobsListUuid){
+
+                        if(Bukkit.getEntity(target) == null) continue;
+                        Entity entity = Bukkit.getEntity(target);
+
+                        assert entity != null;
+                        if(!entity.getPersistentDataContainer().has(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING)) return;
+                        String key = entity.getPersistentDataContainer().get(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING);
+                        if(key == null) return;
+                        UUID uuid = UUID.fromString(key);
+
+                        if (uuid.equals(mobs.getId())) entity.remove();
+
                     }
                 }
-                Mobs.mobsListUuid.remove(mobs);
                 /*
-                TODO: Fix skills dependency.
                 if (Bukkit.getPluginManager().getPlugin("Skils") != null){
                     if (!FEC.hunters.isEmpty() || !FEC.monster.isEmpty()){
                         FEC fec = FEC.getFECMobs(mobs, FEC.hunters);
@@ -130,13 +141,11 @@ public class InteractMenu implements Listener {
                 }
                  */
                 Mobs.removeMobs(mobs);
-                assert mobs != null;
                 p.openInventory(gui.onMobMoreGUI(p, mobs.getRank(), true));
                 return;
             }
             if (it.getType().equals(Material.GREEN_CONCRETE)) {
                 p.closeInventory();
-                assert mobs != null;
                 p.openInventory(gui.onMobMoreGUI(p, mobs.getRank(), true));
                 return;
             }
@@ -375,7 +384,7 @@ public class InteractMenu implements Listener {
                 m.getWorldspawn().clear();
                 m.getWorldspawn().add(typeAll);
                 e.getView().setItem(3, GUI.onWorldSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
 
@@ -384,7 +393,7 @@ public class InteractMenu implements Listener {
                 m.getWorldspawn().clear();
                 m.getWorldspawn().add("Aucun");
                 e.getView().setItem(3, GUI.onWorldSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
 
@@ -396,7 +405,7 @@ public class InteractMenu implements Listener {
                 m.getWorldspawn().add(it.getItemMeta().getDisplayName());
             }
             e.getView().setItem(3, GUI.onWorldSelectAll(m));
-            e.getView().setItem(0, GUI.onSkull(m, false));
+            e.getView().setItem(0, onSkull(m, false));
 
         }
 
@@ -428,7 +437,7 @@ public class InteractMenu implements Listener {
                 m.getBiomespawn().clear();
                 m.getBiomespawn().add(typeAll);
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.OAK_SAPLING)){
@@ -440,7 +449,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.FOREST.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.DARK_OAK_SAPLING)){
@@ -452,7 +461,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.DARK_FOREST.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.ACACIA_SAPLING)){
@@ -464,7 +473,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.SAVANNA.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.BIRCH_SAPLING)){
@@ -476,7 +485,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.BIRCH_FOREST.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.SAND)){
@@ -488,7 +497,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.DESERT.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.TERRACOTTA)){
@@ -500,7 +509,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.BADLANDS.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.VINE)){
@@ -512,7 +521,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.JUNGLE.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.PODZOL)){
@@ -524,7 +533,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.TAIGA.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.GRASS_BLOCK)){
@@ -536,7 +545,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.PLAINS.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.SNOW)){
@@ -548,7 +557,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.SNOWY_PLAINS.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.PACKED_ICE)){
@@ -560,7 +569,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.ICE_SPIKES.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.HONEYCOMB)){
@@ -572,7 +581,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.MEADOW.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.STONE)){
@@ -584,7 +593,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.WINDSWEPT_HILLS.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.SPRUCE_LEAVES)){
@@ -596,7 +605,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.WINDSWEPT_FOREST.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.LILY_PAD)){
@@ -608,7 +617,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.SWAMP.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
 
@@ -621,7 +630,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.NETHER_WASTES.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.SOUL_SAND)){
@@ -633,7 +642,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.SOUL_SAND_VALLEY.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.CRIMSON_FUNGUS)){
@@ -645,7 +654,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.CRIMSON_FOREST.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.WARPED_FUNGUS)){
@@ -657,7 +666,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.WARPED_FOREST.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.BASALT)){
@@ -669,7 +678,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.BASALT_DELTAS.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.END_STONE)){
@@ -681,7 +690,7 @@ public class InteractMenu implements Listener {
                     m.getBiomespawn().add(Biome.END_HIGHLANDS.name());
                 }
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
             if (it.getType().equals(Material.BARRIER)){
@@ -689,21 +698,22 @@ public class InteractMenu implements Listener {
                 m.getBiomespawn().clear();
                 m.getBiomespawn().add("Aucun");
                 e.getView().setItem(3, GUI.onBiomeSelectAll(m));
-                e.getView().setItem(0, GUI.onSkull(m, false));
+                e.getView().setItem(0, onSkull(m, false));
                 return;
             }
 
         }
         //Gui édition du stuff
         if (e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + ChatColor.GRAY + "Stuff")){
+            if (!Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST)) return;
+            e.setCancelled(e.getSlot() != 20 && e.getSlot() != 21 && e.getSlot() != 22 && e.getSlot() != 23 && e.getSlot() != 24 && e.getSlot() != 25 && Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST));
+
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
 
-            e.setCancelled(e.getSlot() != 20 && e.getSlot() != 21 && e.getSlot() != 22 && e.getSlot() != 23 && e.getSlot() != 24 && e.getSlot() != 25 && Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST));
-
             ItemStack it = e.getCurrentItem();
             if (it == null)return;
-            if (!Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST)) return;
+
             ItemStack mobs = e.getView().getItem(0);
             assert mobs != null;
             Mobs m = Mobs.getMobs(Objects.requireNonNull(mobs.getItemMeta()).getDisplayName().replace(ChatColor.GREEN+"", ""));
@@ -730,14 +740,17 @@ public class InteractMenu implements Listener {
         }
         //Gui édition des effets de morts
         if(e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + ChatColor.GRAY + "DeathMenu")){
+
+            if (!Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST)) return;
+            e.setCancelled(Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST));
+
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
 
-            e.setCancelled(Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST));
 
             ItemStack it = e.getCurrentItem();
             if (it == null)return;
-            if (!Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST)) return;
+
             ItemStack mobs = e.getView().getItem(0);
             assert mobs != null;
             Mobs m = Mobs.getMobs(Objects.requireNonNull(mobs.getItemMeta()).getDisplayName().replace(ChatColor.GREEN+"", ""));
@@ -791,7 +804,6 @@ public class InteractMenu implements Listener {
                     p.openInventory(gui.onDeathMenuSpawnEditCountMob(m));
                 }
 
-
                 return;
             }
 
@@ -806,14 +818,16 @@ public class InteractMenu implements Listener {
         }
         //Gui Sous-menu effects de morts partie spawn selection du mobs
         if(e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + ChatColor.DARK_GRAY + "Selection")){
+
+            if (!Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST)) return;
+            e.setCancelled(Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST));
+
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
 
-            e.setCancelled(Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST));
-
             ItemStack it = e.getCurrentItem();
             if (it == null)return;
-            if (!Objects.requireNonNull(e.getClickedInventory()).getType().equals(InventoryType.CHEST)) return;
+
             ItemStack mobs = e.getView().getItem(0);
             assert mobs != null;
             Mobs m = Mobs.getMobs(Objects.requireNonNull(mobs.getItemMeta()).getDisplayName().replace(ChatColor.GREEN+"", ""));
@@ -846,8 +860,12 @@ public class InteractMenu implements Listener {
                 return;
 
             }
-            assert m != null;
-            assert target != null;
+            if(m ==  null || target == null) return;
+            if(DeathEffect.checkMobSpawning(m, target)) {
+                p.sendMessage(Messages.getPrefix()+ChatColor.RED+"Vous ne pouvez pas définir ce mob cela causerait une boucle infinie");
+                return;
+            }
+
             m.getDeathEffect().getDeathSpawn().setMobs(target.getName());
             m.getDeathEffect().getDeathSpawn().setActif(true);
             m.getDeathEffect().getDeathSpawn().setCount(1);
@@ -859,6 +877,7 @@ public class InteractMenu implements Listener {
             return;
         }
 
+        //qunatité des mobs qui spawn
         if(e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + ChatColor.DARK_GRAY + "Quantité")){
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
@@ -1184,7 +1203,7 @@ public class InteractMenu implements Listener {
             }
             return;
         }
-        //Menu selection(Spawn)
+        //Menu selection(Spawn potion effect)
         if(e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + ChatColor.DARK_GRAY + "SpawnPotion Select")) {
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
@@ -1216,7 +1235,7 @@ public class InteractMenu implements Listener {
             }
 
         }
-        //Menu power(Spawn)
+        //Menu power(Spawn potion effect)
         if(e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + ChatColor.DARK_GRAY + "SpawnPotion Power")) {
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
@@ -1243,7 +1262,7 @@ public class InteractMenu implements Listener {
             }
 
         }
-        // menu durée (Spawn)
+        // menu durée (Spawn potion effect)
         if(e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + ChatColor.DARK_GRAY + "SpawnPotion Durée")) {
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
@@ -1274,7 +1293,7 @@ public class InteractMenu implements Listener {
             }
         }
 
-        //Gui de Damage effect
+        //Gui de Damage effect apply
         if(e.getView().getTitle().equalsIgnoreCase( Messages.getPrefix() +ChatColor.DARK_GRAY + "Damage Effect")) {
 
             Player p = (Player) e.getWhoClicked();
@@ -1324,7 +1343,7 @@ public class InteractMenu implements Listener {
             }
             return;
         }
-        // menu durée(Damage)
+        // menu durée(Damage effect apply)
         if(e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + ChatColor.DARK_GRAY + "DamagePotion Durée")) {
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
@@ -1354,7 +1373,7 @@ public class InteractMenu implements Listener {
                 return;
             }
         }
-        //Menu power(Damage)
+        //Menu power(Damage effect apply)
         if(e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + ChatColor.DARK_GRAY + "DamagePotion Power")) {
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
@@ -1382,7 +1401,7 @@ public class InteractMenu implements Listener {
 
         }
 
-        //Menu selection(Damage)
+        //Menu selection(Damage effect apply)
         if(e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + ChatColor.DARK_GRAY + "DamagePotion Select")) {
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
@@ -1419,6 +1438,7 @@ public class InteractMenu implements Listener {
         //////////////
         //////////////
         //////////////
+        //Menu des loots
         if(e.getView().getTitle().equalsIgnoreCase(  Messages.getPrefix() + ChatColor.DARK_GRAY + "Loots")) {
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
@@ -1557,6 +1577,8 @@ public class InteractMenu implements Listener {
             }
         }
 
+
+        //Menu edition Suppression du loots
         if (e.getView().getType().equals(InventoryType.HOPPER) && e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + ChatColor.DARK_GRAY + "Loots Remove")){
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
@@ -1723,6 +1745,7 @@ public class InteractMenu implements Listener {
                 p.openInventory(gui.onGuiEditMobsSpawnHeight(m));
                 return;
             }
+            //Selection du monde ou le mob spawn
             if(it.getType().equals(Material.PLAYER_HEAD)){
                 p.closeInventory();
                 p.openInventory(gui.onGuiEditMobsSpawnWorld(m));
@@ -1730,7 +1753,7 @@ public class InteractMenu implements Listener {
             }
         }
 
-        //Menu Edition Loot & Stuff
+        //Menu Edition spawn
         if (e.getView().getType().equals(InventoryType.CHEST) && e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + "Spawn")) {
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();
@@ -1752,7 +1775,7 @@ public class InteractMenu implements Listener {
             }
         }
 
-        //Menu Edition Loot & Stuff
+        //Menu Edition Loot hauteur ou il peut sapwn
         if (e.getView().getType().equals(InventoryType.CHEST) && e.getView().getTitle().equalsIgnoreCase(Messages.getPrefix() + "Hauteur de Spawn")) {
             Player p = (Player) e.getWhoClicked();
             GUI gui = new GUI();

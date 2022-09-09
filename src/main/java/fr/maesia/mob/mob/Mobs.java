@@ -1,5 +1,6 @@
 package fr.maesia.mob.mob;
 
+
 import fr.maesia.mob.mob.ppe.PotionEffectMobs;
 import fr.maesia.mob.mob.rangs.Rang;
 import fr.maesia.mob.mob.rangs.RangsLoots;
@@ -10,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 public class Mobs {
-
 
     private final EntityType entityType;
     private final String name;
@@ -37,7 +37,7 @@ public class Mobs {
     private final PotionEffectMobs EffectMobsDamage;
 
     public static final List<Mobs> mobsList = new ArrayList<>();
-    public static final HashMap<Mobs, List<UUID>> mobsListUuid = new HashMap<>();
+    public static final Set<UUID> mobsListUuid = new HashSet<>();
 
     public Mobs(EntityType entityType, String name, UUID uuid){
         this.entityType = entityType;
@@ -65,8 +65,6 @@ public class Mobs {
         this.EffectMobsSpawn = new PotionEffectMobs();
         this.EffectMobsDamage = new PotionEffectMobs();
         this.loots = new HashMap<>();
-        List<UUID> list = new ArrayList<>();
-        mobsListUuid.put(this, list);
         mobsList.add(this);
     }
 
@@ -162,7 +160,7 @@ public class Mobs {
         this.speed = speed;
     }
 
-    public static Mobs getMobsUuid(UUID uuid){
+    public static Mobs getMobs(UUID uuid){
         for (Mobs mobs : mobsList){
             if (mobs.getId().equals(uuid)){
                 return mobs;
@@ -266,11 +264,4 @@ public class Mobs {
         return EffectMobsDamage;
     }
 
-
-    public Mobs onUuidMobs(UUID uuid){
-        for (Map.Entry<Mobs, List<UUID>> mobs : mobsListUuid.entrySet()){
-            if (mobs.getValue().contains(uuid)) return mobs.getKey();
-        }
-        return null;
-    }
 }

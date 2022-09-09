@@ -28,4 +28,10 @@ public class DeathEffect {
     public DeathPotionEffect getDeathPotionEffect() {
         return deathPotionEffect;
     }
+
+    public static boolean checkMobSpawning(Mobs mob, Mobs target){
+        if(!target.getDeathEffect().getDeathSpawn().isActif()) return false;
+        if(target.getDeathEffect().getDeathSpawn().getMobs().getId().equals(mob.getId())) return true;
+        return checkMobSpawning(mob, target.getDeathEffect().getDeathSpawn().getMobs());
+    }
 }
