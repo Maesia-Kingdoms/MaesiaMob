@@ -1,8 +1,7 @@
 package fr.maesia.mob.utils.LoadUnload;
 
 import fr.maesia.mob.MaesiaMob;
-import fr.maesia.mob.listener.CombatsMobs;
-import fr.maesia.mob.listener.DeathMob;
+
 import fr.maesia.mob.mob.Mobs;
 import fr.maesia.mob.mob.rangs.Rang;
 import fr.maesia.mob.mob.rangs.RangsLoots;
@@ -38,18 +37,17 @@ public class LoadUnLoad {
         YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
         String m = "Mobs";
         configuration.set(m, "");
-        for(Map.Entry<Mobs, List<UUID>> list : Mobs.mobsListUuid.entrySet()){
-            if (!list.getValue().isEmpty()){
-                configuration.set(m+"."+list.getKey().getName(), onListUuidToListString(list.getValue()));
-            }
 
-        }
+        if (!Mobs.mobsListUuid.isEmpty()) configuration.set(m+".Uuid", onListUuidToListString());
+
+
+
         configuration.save(file);
     }
 
-    private static List<String> onListUuidToListString(List<UUID> uuids){
+    private static List<String> onListUuidToListString(){
         List<String> stringUuid = new ArrayList<>();
-        for(UUID convect : uuids){
+        for(UUID convect : Mobs.mobsListUuid){
             stringUuid.add(convect.toString());
         }
         return stringUuid;
@@ -153,7 +151,6 @@ public class LoadUnLoad {
         if (!file.exists()) return;
         YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
         String m = "Mobs";
-        if (!configuration.contains(m))return;
         for (String key : Objects.requireNonNull(configuration.getConfigurationSection(m + ".")).getKeys(false)) {
             UUID uuid = UUID.fromString(Objects.requireNonNull(configuration.getString(m + "." + key + ".Id")));
             Mobs mobs = new Mobs(EntityType.valueOf(configuration.getString(m + "." + key + ".Type")), key, uuid);
@@ -252,12 +249,11 @@ public class LoadUnLoad {
             for(String key : Objects.requireNonNull(configuration.getConfigurationSection(m + ".")).getKeys(false)){
                 Mobs mobs = Mobs.getMobs(key);
                 if (mobs != null){
-                    Mobs.mobsListUuid.get(mobs).addAll(onListStringToListUuid(configuration.getStringList(m+"."+key)));
+                    Mobs.mobsListUuid.addAll(onListStringToListUuid(configuration.getStringList(m+".Uuid")));
                 }
             }
         }
 
-        onSetMobList();
     }
 
     private static List<UUID> onListStringToListUuid(List<String> strings){
@@ -269,24 +265,5 @@ public class LoadUnLoad {
         return uuids;
     }
 
-    private static void onSetMobList(){
-        for (Map.Entry<Mobs, List<UUID>> mobslist : Mobs.mobsListUuid.entrySet()){
-            if(mobslist.getKey().getEffectMobsDamage().isActif()){
-                for(UUID mobs : mobslist.getValue()){
-                    CombatsMobs.Combateffect.put(mobs, mobslist.getKey());
-                }
-            }
-            if(mobslist.getKey().getDeathEffect().getDeathPotionEffect().isActif()|| mobslist.getKey().getDeathEffect().getDeathSpawn().isActif()||mobslist.getKey().getDeathEffect().getDeathExplotion().isActif()){
-                for(UUID mobs : mobslist.getValue()){
-                    DeathMob.deatheffect.put(mobs, mobslist.getKey());
-                }
-            }
-            if(!mobslist.getKey().getLoots().isEmpty()){
-                for(UUID mobs : mobslist.getValue()){
-                    DeathMob.lootTable.put(mobs, mobslist.getKey());
-                }
-            }
-        }
-    }
 
 }

@@ -24,7 +24,7 @@ public class DeathMob implements Listener {
     private void onDeathMobEffect(EntityDeathEvent e){
 
         for(Mobs mobs : Mobs.mobsList){
-            Mobs.mobsListUuid.get(mobs).remove(e.getEntity().getUniqueId());
+            Mobs.mobsListUuid.remove(e.getEntity().getUniqueId());
         }
         Player killer = e.getEntity().getKiller();
 
