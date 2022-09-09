@@ -6,7 +6,7 @@
 
     <groupId>fr.maesia.mob</groupId>
     <artifactId>maesia-mob</artifactId>
-    <version>1.5.0</version>
+    <version>1.6.0</version>
     <packaging>jar</packaging>
 
     <name>MaesiaMob</name>
@@ -32,51 +32,22 @@
         </developer>
     </developers>
 
-    <contributors>
-        <contributor>
-            <name>MrCubee</name>
-            <email>contact@mrcubee.fr</email>
-            <url>https://github.com/MrCubee</url>
-        </contributor>
-    </contributors>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <!--suppress UnresolvedMavenProperty -->
-        <commit.version>${git.branch.name}-${git.commit.last.sha1_short}</commit.version>
-        <plugin.version>${project.version} (git ${commit.version})</plugin.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>mrcubee-public</id>
-            <url>https://nexus.mrcubee.net/repository/minecraft/</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.18.1-R0.1-SNAPSHOT</version>
+            <version>1.19-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>mrcubee-public</id>
-            <url>https://nexus.mrcubee.net/repository/minecraft/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
 
     <build>
         <defaultGoal>clean package</defaultGoal>
@@ -96,19 +67,6 @@
                     <source>11</source>
                     <target>11</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>fr.mrcubee.maven</groupId>
-                <artifactId>gitplugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>parse</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

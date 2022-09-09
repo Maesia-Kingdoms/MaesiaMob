@@ -4,7 +4,6 @@ import fr.maesia.mob.maesiamob.MaesiaMob;
 import fr.maesia.mob.maesiamob.Mob.Mobs;
 
 import fr.maesia.mob.maesiamob.Mob.rangs.RangsLoots;
-import maesia.skils.farms.FEC;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -44,6 +43,7 @@ public class DeathMob implements Listener {
 
 
         if(!mobs.getLoots().isEmpty()){
+            /* Event a crée ici
             if (Bukkit.getPluginManager().getPlugin("Skils") == null){
 
                 ondropsmobs(e.getEntity().getLocation(), mobs, 90, looting);
@@ -56,6 +56,8 @@ public class DeathMob implements Listener {
                     ondropsmobs(e.getEntity().getLocation(), mobs, 90, looting);
                 }
             }
+
+             */
         }
         if (mobs.getDeathEffect().getDeathSpawn().isActif() || mobs.getDeathEffect().getDeathPotionEffect().isActif() || mobs.getDeathEffect().getDeathExplotion().isActif()){
             if (mobs.getDeathEffect().getDeathSpawn().isActif()){
