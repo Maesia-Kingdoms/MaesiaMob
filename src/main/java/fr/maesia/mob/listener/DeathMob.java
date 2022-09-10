@@ -35,9 +35,19 @@ public class DeathMob implements Listener {
         e.getDrops().clear();
         e.setDroppedExp(0);
 
+        Random random = new Random();
+        int proba = random.nextInt(70)  + 50;
+
         Player killer = e.getEntity().getKiller();
 
+        boolean drops = true;
+
         if (killer == null) return;
+
+        DeathCustomMobEvent deathCustomMobEvent = new DeathCustomMobEvent(mobs, killer, mobs.getLoots(), drops, proba  , e.getEntity(), e.getEntityType());
+        Bukkit.getServer().getPluginManager().callEvent(deathCustomMobEvent);
+        if(deathCustomMobEvent.isCancelled()) return;
+
         int looting = 0;
 
 
@@ -45,12 +55,9 @@ public class DeathMob implements Listener {
             looting = Objects.requireNonNull(killer.getEquipment().getItemInMainHand().getItemMeta()).getEnchants().get(Enchantment.LOOT_BONUS_MOBS) * 7;
         }
 
-        if (!mobs.getLoots().isEmpty()){
+        if (!mobs.getLoots().isEmpty() && deathCustomMobEvent.isDrops()){
 
-            DeathCustomMobEvent deathCustomMobEvent = new DeathCustomMobEvent(mobs, killer, mobs.getLoots(), e.getEntity(), e.getEntityType());
-            Bukkit.getServer().getPluginManager().callEvent(deathCustomMobEvent);
-            if(deathCustomMobEvent.isCancelled()) return;
-            ondropsmobs(e.getEntity().getLocation(), uuid, 90, looting);
+            onDropsLoot(e.getEntity().getLocation(), mobs, deathCustomMobEvent.getProbility(), looting);
         }
 
 
@@ -70,9 +77,6 @@ public class DeathMob implements Listener {
 
 
 
-    public static void ondropsmobs(Location location, UUID uuid, int proba, int bonus){
-        onDropsLoot(location, Mobs.getMobs(uuid), proba, bonus);
-    }
 
     private static void onDropsLoot(Location location, Mobs mobs, int proba, int  bonus){
         Random random = new Random();

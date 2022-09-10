@@ -30,13 +30,17 @@ public class DeathCustomMobEvent extends Event implements Cancellable {
     private final Entity entity;
     private final EntityType entityType;
     private final HashMap<ItemStack, RangsLoots> loots;
+    private boolean drops;
+    private int probility;
     private boolean cancellled;
 
-    public DeathCustomMobEvent(Mobs mob, Player killer, HashMap<ItemStack, RangsLoots> loots, Entity entity, EntityType entityType){
+    public DeathCustomMobEvent(Mobs mob, Player killer, HashMap<ItemStack, RangsLoots> loots, boolean drops, int probility, Entity entity, EntityType entityType){
         this.mobs = mob;
         this.killer = killer;
         this.loots = loots;
+        this.drops = drops;
         this.entity = entity;
+        this.probility = probility;
         this.entityType = entityType;
     }
 
@@ -50,6 +54,18 @@ public class DeathCustomMobEvent extends Event implements Cancellable {
 
     public HashMap<ItemStack, RangsLoots> getLoots() {
         return loots;
+    }
+
+    public boolean isDrops() {
+        return drops;
+    }
+
+    public int getProbility() {
+        return probility;
+    }
+
+    public void setProbility(int probility) {
+        this.probility = probility;
     }
 
     public Entity getEntity() {
