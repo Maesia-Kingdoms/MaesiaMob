@@ -2,6 +2,8 @@ package fr.maesia.mob.utils.CustomEvents;
 
 import fr.maesia.mob.mob.Mobs;
 import fr.maesia.mob.mob.rangs.RangsLoots;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -25,13 +27,17 @@ public class DeathCustomMobEvent extends Event implements Cancellable {
 
     private final Mobs mobs;
     private final Player killer;
+    private final Entity entity;
+    private final EntityType entityType;
     private final HashMap<ItemStack, RangsLoots> loots;
     private boolean cancellled;
 
-    public DeathCustomMobEvent(Mobs mob, Player killer, HashMap<ItemStack, RangsLoots> loots){
+    public DeathCustomMobEvent(Mobs mob, Player killer, HashMap<ItemStack, RangsLoots> loots, Entity entity, EntityType entityType){
         this.mobs = mob;
         this.killer = killer;
         this.loots = loots;
+        this.entity = entity;
+        this.entityType = entityType;
     }
 
     public Mobs getMobs() {
@@ -44,6 +50,14 @@ public class DeathCustomMobEvent extends Event implements Cancellable {
 
     public HashMap<ItemStack, RangsLoots> getLoots() {
         return loots;
+    }
+
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public EntityType getEntityType() {
+        return entityType;
     }
 
     public boolean isCancelled() {

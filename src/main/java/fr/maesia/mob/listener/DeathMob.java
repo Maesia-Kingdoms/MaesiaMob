@@ -26,13 +26,15 @@ public class DeathMob implements Listener {
 
         if(!e.getEntity().getPersistentDataContainer().has(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING)) return;
         String key =  e.getEntity().getPersistentDataContainer().get(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING);
+
         if(key == null) return;
         UUID uuid = UUID.fromString(key);
         Mobs mobs = Mobs.getMobs(uuid);
 
         if (mobs == null)return;
-        Player killer = e.getEntity().getKiller();
+        e.getDrops().clear();
 
+        Player killer = e.getEntity().getKiller();
 
         if (killer == null) return;
         int looting = 0;
@@ -43,7 +45,8 @@ public class DeathMob implements Listener {
         }
 
         if (!mobs.getLoots().isEmpty()){
-            DeathCustomMobEvent deathCustomMobEvent = new DeathCustomMobEvent(mobs, killer, mobs.getLoots());
+
+            DeathCustomMobEvent deathCustomMobEvent = new DeathCustomMobEvent(mobs, killer, mobs.getLoots(), e.getEntity(), e.getEntityType());
             Bukkit.getServer().getPluginManager().callEvent(deathCustomMobEvent);
             if(deathCustomMobEvent.isCancelled()) return;
             ondropsmobs(e.getEntity().getLocation(), uuid, 90, looting);
