@@ -135,19 +135,9 @@ public class SpawnMob implements Listener {
         LivingEntity newmob = (LivingEntity) entity;
         SpawnMob.onCustomMob(newmob, mobs.getRank().getColor() + mobs.getName(), entity.getUniqueId(), mobs.getHealth(), mobs.getDamage(), mobs.getSpeed(), mobs.getAttackspeed());
 
-        if (mobs.getDeathEffect().getDeathSpawn().isActif() || mobs.getDeathEffect().getDeathExplotion().isActif() || mobs.getDeathEffect().getDeathPotionEffect().isActif()) {
-            DeathMob.deatheffect.put(entity.getUniqueId(), mobs);
-        }
-
-
         if (mobs.getEntityType().equals(EntityType.PILLAGER) || mobs.getEntityType().equals( EntityType.GIANT)){
             CombatsMobs.Combatreact.put(entity.getUniqueId(), mobs);
         }
-
-        if (!mobs.getLoots().isEmpty()) {
-            DeathMob.lootTable.put(entity.getUniqueId(), mobs);
-        }
-
 
         Objects.requireNonNull(((LivingEntity) entity).getEquipment()).setHelmet(mobs.getHelmet());
         ((LivingEntity) entity).getEquipment().setChestplate(mobs.getChestplate());
