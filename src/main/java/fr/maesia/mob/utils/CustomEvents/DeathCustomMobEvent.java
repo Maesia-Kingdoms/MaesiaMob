@@ -60,6 +60,10 @@ public class DeathCustomMobEvent extends Event implements Cancellable {
         return drops;
     }
 
+    public void setDrops(boolean drops) {
+        this.drops = drops;
+    }
+
     public int getProbility() {
         return probility;
     }
