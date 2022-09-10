@@ -1,6 +1,6 @@
 name: MaesiaMob
 version: '${project.version}'
-main: fr.maesia.mob.maesiamob.MaesiaMob
+main: fr.maesia.mob.MaesiaMob
 api-version: 1.18
 authors: [ novah95 ]
 softdepend:
