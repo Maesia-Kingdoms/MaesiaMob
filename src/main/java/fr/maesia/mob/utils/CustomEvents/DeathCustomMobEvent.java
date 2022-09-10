@@ -23,9 +23,9 @@ public class DeathCustomMobEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    private Mobs mobs;
-    private Player killer;
-    private HashMap<ItemStack, RangsLoots> loots;
+    private final Mobs mobs;
+    private final Player killer;
+    private final HashMap<ItemStack, RangsLoots> loots;
     private boolean cancellled;
 
     public DeathCustomMobEvent(Mobs mob, Player killer, HashMap<ItemStack, RangsLoots> loots){
@@ -36,6 +36,14 @@ public class DeathCustomMobEvent extends Event implements Cancellable {
 
     public Mobs getMobs() {
         return mobs;
+    }
+
+    public Player getKiller() {
+        return killer;
+    }
+
+    public HashMap<ItemStack, RangsLoots> getLoots() {
+        return loots;
     }
 
     public boolean isCancelled() {

@@ -126,20 +126,7 @@ public class InteractMenu implements Listener {
 
                     }
                 }
-                /*
-                if (Bukkit.getPluginManager().getPlugin("Skils") != null){
-                    if (!FEC.hunters.isEmpty() || !FEC.monster.isEmpty()){
-                        FEC fec = FEC.getFECMobs(mobs, FEC.hunters);
-                        if (fec != null){
-                            FEC.hunters.remove(fec);
-                        }
-                        fec = FEC.getFECMobs(mobs, FEC.monster);
-                        if (fec != null){
-                            FEC.monster.remove(fec);
-                        }
-                    }
-                }
-                 */
+
                 Mobs.removeMobs(mobs);
                 p.openInventory(gui.onMobMoreGUI(p, mobs.getRank(), true));
                 return;

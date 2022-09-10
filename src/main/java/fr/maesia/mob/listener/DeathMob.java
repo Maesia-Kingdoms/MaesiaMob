@@ -48,15 +48,6 @@ public class DeathMob implements Listener {
             if(deathCustomMobEvent.isCancelled()) return;
             ondropsmobs(e.getEntity().getLocation(), uuid, 90, looting);
         }
-                /*
-                TODO: Fix skills dependency.
-                if (!FEC.isExistMob(FEC.monster, lootTable.get(e.getEntity().getUniqueId()))){
-                    ondropsmobs(e.getEntity().getLocation(), e.getEntity().getUniqueId(), 90, looting);
-                }
-                if (!FEC.isExistMob(FEC.hunters, lootTable.get(e.getEntity().getUniqueId()))){
-                    ondropsmobs(e.getEntity().getLocation(), e.getEntity().getUniqueId(), 90, looting);
-                }
-                 */
 
 
         if (!mobs.getDeathEffect().getDeathPotionEffect().isActif() && !mobs.getDeathEffect().getDeathExplotion().isActif() && !mobs.getDeathEffect().getDeathSpawn().isActif()) return;
