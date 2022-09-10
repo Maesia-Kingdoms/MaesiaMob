@@ -1,12 +1,16 @@
 package fr.maesia.mob.mob;
 
 
+import fr.maesia.mob.MaesiaMob;
 import fr.maesia.mob.mob.ppe.PotionEffectMobs;
 import fr.maesia.mob.mob.rangs.Rang;
 import fr.maesia.mob.mob.rangs.RangsLoots;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
@@ -262,6 +266,10 @@ public class Mobs {
 
     public PotionEffectMobs getEffectMobsDamage() {
         return EffectMobsDamage;
+    }
+
+    public static boolean checkEntityIsCustomMob(Entity entity){
+        return  entity.getPersistentDataContainer().has(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING);
     }
 
 }

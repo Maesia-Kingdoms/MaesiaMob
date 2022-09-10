@@ -33,6 +33,7 @@ public class DeathMob implements Listener {
 
         if (mobs == null)return;
         e.getDrops().clear();
+        e.setDroppedExp(0);
 
         Player killer = e.getEntity().getKiller();
 
