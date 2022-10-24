@@ -151,7 +151,7 @@ public class LoadUnLoad {
         if (!file.exists()) return;
         YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
         String m = "Mobs";
-        if (!configuration.contains(m)) return;
+        if (!configuration.contains(m+".")) return;
         for (String key : Objects.requireNonNull(configuration.getConfigurationSection(m + ".")).getKeys(false)) {
             UUID uuid = UUID.fromString(Objects.requireNonNull(configuration.getString(m + "." + key + ".Id")));
             Mobs mobs = new Mobs(EntityType.valueOf(configuration.getString(m + "." + key + ".Type")), key, uuid);

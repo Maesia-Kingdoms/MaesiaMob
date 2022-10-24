@@ -27,34 +27,11 @@ public class SpawnMob implements Listener {
         if (!e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)) return;
 
         List<Mobs> mobsList = new ArrayList<>();
-
-        Rang rang = Rang.F;
-
-        //proba du rang
         Random random = new Random();
-        float r = random.nextFloat();
-
-        if (r < 0.01){
-            rang = Rang.S;
-        }else if(r>= 0.01 && r < 0.1){
-            rang = Rang.A;
-        }
-        else if(r>= 0.1 && r < 0.15){
-            rang = Rang.B;
-        }
-        else if(r>= 0.15 && r < 0.30){
-            rang = Rang.C;
-        }
-        else if(r>= 0.30 && r < 0.50){
-            rang = Rang.D;
-        }
-        else if(r>= 0.50 && r < 0.70){
-            rang = Rang.E;
-        }
 
         //filtre des mobs : check le type, Le rang & le biome
         for (Mobs m : Mobs.mobsList) {
-            if (m.getRank().equals(rang) && (m.getBiomespawn().contains("All") || m.getBiomespawn().contains(e.getLocation().getBlock().getBiome().name()) || getBiomeAll(m.getBiomespawn(), e.getLocation().getBlock().getBiome().name())) && (m.getHeight_max() <= e.getLocation().getBlockY() && m.getHeight_min() >= e.getLocation().getBlockY()) && (m.getWorldspawn().contains("All") || m.getWorldspawn().contains(Objects.requireNonNull(e.getLocation().getWorld()).getName()) || getWorldAll(m.getWorldspawn(), e.getLocation().getWorld().getEnvironment()) ) ){
+            if (m.getRank().equals(Rang.randomRang()) && (m.getBiomespawn().contains("All") || m.getBiomespawn().contains(e.getLocation().getBlock().getBiome().name()) || getBiomeAll(m.getBiomespawn(), e.getLocation().getBlock().getBiome().name())) && (m.getHeight_max() <= e.getLocation().getBlockY() && m.getHeight_min() >= e.getLocation().getBlockY()) && (m.getWorldspawn().contains("All") || m.getWorldspawn().contains(Objects.requireNonNull(e.getLocation().getWorld()).getName()) || getWorldAll(m.getWorldspawn(), e.getLocation().getWorld().getEnvironment()) ) ){
                 mobsList.add(m);
             }
         }
@@ -122,6 +99,10 @@ public class SpawnMob implements Listener {
         for (int i = 0; i < count; i++) {
             onMobs(mobs, 0,loc);
         }
+    }
+
+    public static Entity onSpawnerSpawnMob(Mobs mobs, int count, Location location){
+        return onMobs(mobs, count, location);
     }
 
     private static Entity onMobs(Mobs mobs, int count,Location loc) {

@@ -4,6 +4,9 @@ import fr.maesia.mob.mob.Mobs;
 import fr.maesia.mob.MaesiaMobFiles.Messages.Messages;
 import fr.maesia.mob.MaesiaMobFiles.Messages.MessagesValues;
 import fr.maesia.mob.listener.SpawnMob;
+import fr.maesia.mob.spawner.GUI.MenuSpawner;
+import fr.maesia.mob.spawner.Spawner;
+import fr.maesia.mob.utils.EntityHead;
 import fr.maesia.mob.utils.GUI;
 import fr.maesia.mob.utils.LoadUnload.LoadUnLoad;
 import org.bukkit.ChatColor;
@@ -28,7 +31,7 @@ public class Commands implements TabExecutor {
             Player player = (Player) sender;
             GUI gui = new GUI();
             if (player.isOp()){
-                if (command.getName().equalsIgnoreCase("moremob")) {
+                if (command.getName().equalsIgnoreCase("MaesiaMob")) {
                     if (args.length == 0){
                         onHelp(player);
                         return true;
@@ -117,8 +120,34 @@ public class Commands implements TabExecutor {
                     onHelp(player);
                     return true;
                 }
+
+
+
+                //Spawner
+
+
+                if(command.getName().equalsIgnoreCase("Spawner")){
+                    if (args.length == 0){
+                        player.sendMessage(Messages.getPrefix()+"La commande est /sp set [nom]");
+                        return true;
+                    }
+                    if (args[0].equalsIgnoreCase("Set")){
+                        if (args.length < 2){
+                            player.sendMessage(Messages.getPrefix()+"Tu dois set un nom");
+                            return true;
+                        }
+                        new Spawner(args[1], player.getLocation());
+                        player.sendMessage(Messages.getPrefix()+"Le spawner "+ChatColor.GOLD+args[1]+ChatColor.RESET+" Viens d'etre crée avec success.");
+                        return true;
+                    }
+                    if (args[0].equalsIgnoreCase("edit")){
+                       new MenuSpawner(MenuSpawner.getSpawnerMenuMain() ,player, "MenuMainSpawner");
+                       return true;
+                    }
+                }
             }
 
+            //Commandes Joueurs Bestiores
             if (command.getName().equalsIgnoreCase("Bestiaire")) {
                 player.openInventory(gui.onGuiBestiare());
                 return true;
@@ -134,7 +163,7 @@ public class Commands implements TabExecutor {
         List<String> arguments = new ArrayList<>();
         if (sender instanceof Player){
             Player player = (Player) sender;
-            if (command.getName().equalsIgnoreCase("moremob")){
+            if (command.getName().equalsIgnoreCase("MaesiaMob")){
                 if (args.length == 1 && player.isOp()){
                     arguments.add("Help");
                     arguments.add("Create");
@@ -146,34 +175,10 @@ public class Commands implements TabExecutor {
                 }
                 if (args.length == 2){
                     if (args[0].equalsIgnoreCase("Create")){
-                        arguments.add(EntityType.BLAZE.name());
-                        arguments.add(EntityType.ZOMBIE.name());
-                        arguments.add(EntityType.SKELETON.name());
-                        arguments.add(EntityType.SLIME.name());
-                        arguments.add(EntityType.ENDERMAN.name());
-                        arguments.add(EntityType.ENDERMITE.name());
-                        arguments.add(EntityType.EVOKER.name());
-                        arguments.add(EntityType.WITCH.name());
-                        arguments.add(EntityType.WITHER_SKELETON.name());
-                        arguments.add(EntityType.HUSK.name());
-                        arguments.add(EntityType.STRAY.name());
-                        arguments.add(EntityType.SPIDER.name());
-                        arguments.add(EntityType.PHANTOM.name());
-                        arguments.add(EntityType.CAVE_SPIDER.name());
-                        arguments.add(EntityType.PILLAGER.name());
-                        arguments.add(EntityType.PIGLIN.name());
-                        arguments.add(EntityType.PIGLIN_BRUTE.name());
-                        arguments.add(EntityType.DROWNED.name());
-                        arguments.add(EntityType.GIANT.name());
-                        arguments.add(EntityType.PIGLIN.name());
-                        arguments.add(EntityType.PIGLIN_BRUTE.name());
-                        arguments.add(EntityType.CREEPER.name());
-                        arguments.add(EntityType.GHAST.name());
-                        arguments.add(EntityType.ZOMBIFIED_PIGLIN.name());
-                        arguments.add(EntityType.HORSE.name());
-                        arguments.add(EntityType.ZOMBIE_HORSE.name());
-                        arguments.add(EntityType.SKELETON_HORSE.name());
-                        return arguments;
+                        for(EntityHead entityHead : EntityHead.values()){
+                            arguments.add(entityHead.getEntityType().name());
+                        }
+                       return arguments;
                     }
                     if(args[0].equalsIgnoreCase("Spawn")){
                         if(Mobs.mobsList.isEmpty()) return null;
@@ -184,6 +189,14 @@ public class Commands implements TabExecutor {
                     }
 
                 }
+            }
+            if (command.getName().equalsIgnoreCase("Spawner")){
+                if (args.length == 1 && player.isOp()){
+                    arguments.add("Set");
+                    arguments.add("Edit");
+                    return arguments;
+                }
+
             }
 
         }
@@ -198,6 +211,8 @@ public class Commands implements TabExecutor {
             p.sendMessage(ChatColor.GRAY+"Editer un mobs -->"+ChatColor.YELLOW+"/mm edit");
             p.sendMessage(Messages.COMMANDS_SPAWN_EXACT.get());
             p.sendMessage(ChatColor.GRAY+"Relaod du plugins -->"+ChatColor.YELLOW+"/mm reload");
+            p.sendMessage(ChatColor.GRAY+"Création d'un spawner -->"+ChatColor.YELLOW+"/Spawner set [nom]");
+            p.sendMessage(ChatColor.GRAY+"Edit d'un spawner -->"+ChatColor.YELLOW+"/Spawner edit");
             p.sendMessage(ChatColor.GRAY+"Sauvegarde des mobs "+ChatColor.RED+" (a faire après chaque création ou éditions)"+ChatColor.GRAY +" -->"+ChatColor.YELLOW+"/mm save");
             p.sendMessage(ChatColor.GRAY+"----------------"+Messages.getPrefix()+ChatColor.GRAY+"----------------");
         }else {

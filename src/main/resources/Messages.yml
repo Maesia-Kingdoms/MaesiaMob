@@ -10,8 +10,6 @@ commands-spawn-exact: "&7Spawn un mobs customs -->&e/mm spawn &7[&6Nombre&7]"
 commands-create-exist: "&cLe nom de ce mobs est déjà utiliser."
 commands-spawn-exist: "&cAucun mobs porte ce nom."
 
-
-
 #Message Edition
 edit-cancel: "&ePour quitter le mode édition taper '&cCancel&e'"
 edit-cancel-success: "&aVous avez quitté le mode &eédition"
@@ -19,10 +17,11 @@ edit-rank: "&aVeulliez taper le numéro souhaiter du rang dans le tchat."
 edit-rank-success: "&aLe mobs &6{mob} &aest désormais au rang &6{rank}"
 
 edit-number-error: "&cVous devez indiquer un nombre valide."
+edit-number-error-exact: "&cVous devez indiquer un nombre supérieur à 0"
 edit-number-float-error: "&cVous devez indiquer un nombre entre &e0 &c& &e1"
 
-edit-health: "&aTaper un le nombre de pv souhaiter pour le mob"
-edit-damage: "&aTaper un le nombre de damage souhaiter pour le mob"
+edit-health: "&aTaper le nombre de pv souhaiter pour le mob"
+edit-damage: "&aTaper le nombre de damage souhaiter pour le mob"
 edit-speed: "&aTaper un nombre entre &e0 &a& &e1&a pour définir la vitesse du mob."
 edit-attack-speed: "&aTaper un nombre pour définir la vitesse d'attack du mob."
 
@@ -30,3 +29,9 @@ edit-health-success: "&aLes points de vie du mob &6{mob} &aest désormais de &6{
 edit-damage-success: "&aLes dégats du mob &6{mob} &aest désormais de &6{value}"
 edit-speed-success: "&aLa vitesse du mob &6{mob} &aest désormais de &6{value}"
 edit-attack-speed-success: "&aLa vitesse d'attack du mob &6{mob} &aest désormais de &6{value}"
+
+edit-spawner-spawn-radius: "&aTaper le rayon de spawn"
+edit-spawner-spawn-limit: "&aTaper le nombre maximun de mob générer par ce spawner"
+edit-spawner-spawn-min: "&aTaper le nombre de spawn minimun"
+edit-spawner-spawn-max: "&aTaper le nombre de spawn maximun"
+remove-spawner-success: "&aLe spawner &6{mob}&a a bien était supprimer."

@@ -7,6 +7,9 @@ import fr.maesia.mob.listener.CombatsMobs;
 import fr.maesia.mob.listener.DeathMob;
 import fr.maesia.mob.listener.InteractMenu;
 import fr.maesia.mob.listener.SpawnMob;
+import fr.maesia.mob.spawner.MenuSpawnerChat;
+import fr.maesia.mob.spawner.MenuSpawnerInteract;
+import fr.maesia.mob.spawner.Spawner;
 import fr.maesia.mob.utils.LoadUnload.LoadUnLoad;
 import fr.maesia.mob.utils.TchatInteract.TchatInteract;
 import org.bukkit.plugin.PluginManager;
@@ -36,8 +39,9 @@ public final class MaesiaMob extends JavaPlugin {
         getLogger().info("=========================================");
 
         //commands
-        Objects.requireNonNull(this.getCommand("MoreMob")).setExecutor(new Commands());
+        Objects.requireNonNull(this.getCommand("MaesiaMob")).setExecutor(new Commands());
         Objects.requireNonNull(this.getCommand("Bestiaire")).setExecutor(new Commands());
+        Objects.requireNonNull(this.getCommand("Spawner")).setExecutor(new Commands());
 
 
         //Listener
@@ -46,14 +50,20 @@ public final class MaesiaMob extends JavaPlugin {
         listener.registerEvents(new SpawnMob(), this);
         listener.registerEvents(new DeathMob(), this);
         listener.registerEvents(new CombatsMobs(), this);
+        listener.registerEvents(new MenuSpawnerInteract(), this);
+        listener.registerEvents(new MenuSpawnerChat(), this);
 
 
         // Plugin startup logic
 
+        //LoadCustom entity
         LoadUnLoad.onLoad();
         LoadUnLoad.onLoadEntityCustom();
 
 
+        //LoadSpawner
+        Spawner.onLoad();
+        Spawner.start();
     }
 
     @Override
@@ -61,6 +71,7 @@ public final class MaesiaMob extends JavaPlugin {
         try {
             LoadUnLoad.onSaveEntityCustom();
             LoadUnLoad.onSave();
+            Spawner.onSave();
         } catch (IOException e) {
             e.printStackTrace();
         }

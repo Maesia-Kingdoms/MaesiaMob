@@ -29,6 +29,7 @@ public enum Messages {
 
     //DAMAGE, HEALTH & Speed
     EDIT_NUMBER_ERROR,
+    EDIT_NUMBER_ERROR_EXACT,
     EDIT_NUMBER_FLOAT_ERROR,
 
     EDIT_HEALTH,
@@ -39,7 +40,14 @@ public enum Messages {
     EDIT_DAMAGE_SUCCESS,
     EDIT_HEALTH_SUCCESS,
     EDIT_SPEED_SUCCESS,
-    EDIT_ATTACK_SPEED_SUCCESS;
+    EDIT_ATTACK_SPEED_SUCCESS,
+
+    EDIT_SPAWNER_SPAWN_RADIUS,
+    EDIT_SPAWNER_SPAWN_LIMIT,
+    EDIT_SPAWNER_SPAWN_MIN,
+    EDIT_SPAWNER_SPAWN_MAX,
+    REMOVE_SPAWNER_SUCCESS,
+    ;
 
     private static final Map<Messages, String> Values = new HashMap<>();
 

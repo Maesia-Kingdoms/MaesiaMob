@@ -4,6 +4,7 @@ import fr.maesia.mob.MaesiaMob;
 import fr.maesia.mob.mob.Mobs;
 
 import fr.maesia.mob.mob.rangs.RangsLoots;
+import fr.maesia.mob.spawner.Spawner;
 import fr.maesia.mob.utils.CustomEvents.DeathCustomMobEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -43,10 +44,20 @@ public class DeathMob implements Listener {
         boolean drops = true;
 
         if (killer == null) return;
+        String keySpawner = e.getEntity().getPersistentDataContainer().get(new NamespacedKey(MaesiaMob.getInstance(), "SpawnerId"),PersistentDataType.STRING);
+
+        if(keySpawner != null) {
+            UUID idSpawner = UUID.fromString(keySpawner);
+            Spawner spawner = Spawner.getId(idSpawner);
+            if(spawner != null) spawner.getMobsSpawn().remove(e.getEntity().getUniqueId());
+
+        }
+
 
         DeathCustomMobEvent deathCustomMobEvent = new DeathCustomMobEvent(mobs, killer, mobs.getLoots(), drops, proba  , e.getEntity(), e.getEntityType());
         Bukkit.getServer().getPluginManager().callEvent(deathCustomMobEvent);
         if(deathCustomMobEvent.isCancelled()) return;
+
 
         int looting = 0;
 
@@ -56,11 +67,8 @@ public class DeathMob implements Listener {
         }
 
         if (!mobs.getLoots().isEmpty() && deathCustomMobEvent.isDrops()){
-
             onDropsLoot(e.getEntity().getLocation(), mobs, deathCustomMobEvent.getProbility(), looting);
         }
-
-
         if (!mobs.getDeathEffect().getDeathPotionEffect().isActif() && !mobs.getDeathEffect().getDeathExplotion().isActif() && !mobs.getDeathEffect().getDeathSpawn().isActif()) return;
 
         if (mobs.getDeathEffect().getDeathSpawn().isActif()){
@@ -73,6 +81,7 @@ public class DeathMob implements Listener {
             PotionEffect potionEffect = new PotionEffect(mobs.getDeathEffect().getDeathPotionEffect().getPotionEffect(), mobs.getDeathEffect().getDeathPotionEffect().getDuration(), mobs.getDeathEffect().getDeathPotionEffect().getPower(), false, false);
             killer.addPotionEffect(potionEffect.getType().createEffect(mobs.getDeathEffect().getDeathPotionEffect().getDuration()*20, mobs.getDeathEffect().getDeathPotionEffect().getPower()-1));
         }
+
     }
 
 

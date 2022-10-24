@@ -6,6 +6,8 @@ import fr.maesia.mob.mob.DeathEffect;
 import fr.maesia.mob.mob.Mobs;
 import fr.maesia.mob.mob.rangs.Rang;
 import fr.maesia.mob.mob.rangs.RangsLoots;
+import fr.maesia.mob.spawner.GUI.MenuSpawner;
+import fr.maesia.mob.spawner.Spawner;
 import fr.maesia.mob.utils.CustomEvents.RemoveMobEvent;
 import fr.maesia.mob.utils.GUI;
 import fr.maesia.mob.utils.PotionEffectItem.ItemtoPotion;
@@ -127,6 +129,7 @@ public class InteractMenu implements Listener {
                     }
                 }
 
+                Spawner.removeMob(mobs);
                 Mobs.removeMobs(mobs);
                 p.openInventory(gui.onMobMoreGUI(p, mobs.getRank(), true));
                 return;

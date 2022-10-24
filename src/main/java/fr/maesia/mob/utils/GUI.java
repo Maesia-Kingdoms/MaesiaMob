@@ -1895,7 +1895,7 @@ public class GUI {
         assert itm != null;
         itm.setDisplayName(ChatColor.GREEN+ mobs.getName());
         PlayerProfile playerProfile = Bukkit.createPlayerProfile("j");
-        playerProfile.setTextures(onSkinSkull(mobs.getEntityType(), playerProfile));
+        playerProfile.setTextures(EntityHead.valueOf(mobs.getEntityType().name()).getSkin());
         playerProfile.update();
         itm.setOwnerProfile(playerProfile);
         List<String> lore = new ArrayList<>();
@@ -1927,24 +1927,7 @@ public class GUI {
     }
 
 
-    private static ItemStack onLeft(int page){
-        ItemStack it = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta itm = (SkullMeta) it.getItemMeta();
-        assert itm != null;
-        if (page > 1){
-            itm.setDisplayName(ChatColor.GREEN +"Page "+(page-1));
-            List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.GRAY+""+ChatColor.ITALIC+"Précédent");
-            itm.setLore(lore);
-        }else {
-            itm.setDisplayName(ChatColor.RED +"Page 0");
-        }
 
-        PlayerProfile playerProfile = Bukkit.createPlayerProfile("MHF_ArrowLeft");
-        itm.setOwnerProfile(playerProfile);
-        it.setItemMeta(itm);
-        return it;
-    }
     private static ItemStack onExit(){
         ItemStack it = new ItemStack(Material.OAK_DOOR);
         ItemMeta itm =  it.getItemMeta();
@@ -1964,6 +1947,25 @@ public class GUI {
         it.setItemMeta(itm);
         return it;
     }
+
+    private static ItemStack onLeft(int page){
+        ItemStack it = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta itm = (SkullMeta) it.getItemMeta();
+        assert itm != null;
+        if (page > 1){
+            itm.setDisplayName(ChatColor.GREEN +"Page "+(page-1));
+            List<String> lore = new ArrayList<>();
+            lore.add(ChatColor.GRAY+""+ChatColor.ITALIC+"Précédent");
+            itm.setLore(lore);
+        }else {
+            itm.setDisplayName(ChatColor.RED +"Page 0");
+        }
+
+        PlayerProfile playerProfile = Bukkit.createPlayerProfile("MHF_ArrowLeft");
+        itm.setOwnerProfile(playerProfile);
+        it.setItemMeta(itm);
+        return it;
+    }
     private static ItemStack onRight(int page){
         ItemStack it = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta itm = (SkullMeta) it.getItemMeta();
@@ -1978,113 +1980,4 @@ public class GUI {
         return it;
     }
 
-    public static PlayerTextures onSkinSkull(EntityType entityType, PlayerProfile playerProfile) throws MalformedURLException {
-        PlayerTextures playerTextures = playerProfile.getTextures();
-        URL url;
-        String part = "http://textures.minecraft.net/texture/";
-        if(EntityType.MAGMA_CUBE.equals(entityType)){
-            url = new URL(part+ "a1c97a06efde04d00287bf20416404ab2103e10f08623087e1b0c1264a1c0f0c");
-            playerTextures.setSkin(url);
-        }else if(EntityType.STRAY.equals(entityType)){
-            url = new URL(part+ "78ddf76e555dd5c4aa8a0a5fc584520cd63d489c253de969f7f22f85a9a2d56");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.SPIDER.equals(entityType)){
-            url = new URL(part+ "5f7e82446fab1e41577ba70ab40e290ef841c245233011f39459ac6f852c8331");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.SLIME.equals(entityType)){
-            url = new URL(part+ "bb13133a8fb4ef00b71ef9bab639a66fbc7d5cffcc190c1df74bf2161dfd3ec7");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.SKELETON.equals(entityType)){
-            url = new URL(part+ "301268e9c492da1f0d88271cb492a4b302395f515a7bbf77f4a20b95fc02eb2");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.BLAZE.equals(entityType)){
-            url = new URL(part+ "b78ef2e4cf2c41a2d14bfde9caff10219f5b1bf5b35a49eb51c6467882cb5f0");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.ZOMBIE.equals(entityType)){
-            url = new URL(part+ "64528b3229660f3dfab42414f59ee8fd01e80081dd3df30869536ba9b414e089");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.ENDERMAN.equals(entityType)){
-            url = new URL(part+ "96c0b36d53fff69a49c7d6f3932f2b0fe948e032226d5e8045ec58408a36e951");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.ENDERMITE.equals(entityType)){
-            url = new URL(part+ "5a1a0831aa03afb4212adcbb24e5dfaa7f476a1173fce259ef75a85855");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.EVOKER.equals(entityType)){
-            url = new URL(part+ "d954135dc82213978db478778ae1213591b93d228d36dd54f1ea1da48e7cba6");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.WITCH.equals(entityType)){
-            url = new URL(part+ "fce6604157fc4ab5591e4bcf507a749918ee9c41e357d47376e0ee7342074c90");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.WITHER_SKELETON.equals(entityType)){
-            url = new URL(part+ "f5ec964645a8efac76be2f160d7c9956362f32b6517390c59c3085034f050cff");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.HUSK.equals(entityType)){
-            url = new URL(part+ "9b9da6b8d06cd28d441398b96766c3b4f370de85c7898205e5c429f178a24597");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.PHANTOM.equals(entityType)){
-            url = new URL(part+ "7e95153ec23284b283f00d19d29756f244313a061b70ac03b97d236ee57bd982");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.CAVE_SPIDER.equals(entityType)){
-            url = new URL(part+ "41645dfd77d09923107b3496e94eeb5c30329f97efc96ed76e226e98224");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.PILLAGER.equals(entityType)){
-            url = new URL(part+ "4aee6bb37cbfc92b0d86db5ada4790c64ff4468d68b84942fde04405e8ef5333");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.PIGLIN.equals(entityType)){
-            url = new URL(part+ "9f18107d275f1cb3a9f973e5928d5879fa40328ff3258054db6dd3e7c0ca6330");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.PIGLIN_BRUTE.equals(entityType)){
-            url = new URL(part + "3e300e9027349c4907497438bac29e3a4c87a848c50b34c21242727b57f4e1cf");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.DROWNED.equals(entityType)){
-            url = new URL(part +"c84df79c49104b198cdad6d99fd0d0bcf1531c92d4ab6269e40b7d3cbbb8e98c");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.GIANT.equals(entityType)){
-            url = new URL( part + "c98547c90ea11c31e9baba500c27bb2c6f5aa0c3c96bf0942549c04b87911869");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.CREEPER.equals(entityType)){
-            url = new URL( part + "f4254838c33ea227ffca223dddaabfe0b0215f70da649e944477f44370ca6952");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.GHAST.equals(entityType)){
-            url = new URL( part + "8b6a72138d69fbbd2fea3fa251cabd87152e4f1c97e5f986bf685571db3cc0");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.ZOMBIFIED_PIGLIN.equals(entityType)){
-            url = new URL( part + "7eabaecc5fae5a8a49c8863ff4831aaa284198f1a2398890c765e0a8de18da8c");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.HORSE.equals(entityType)){
-            url = new URL( part + "397a3c20da5eea01c4132c3ff45ea80a364ad42f74dbf797cca4f8ab2d42adb3");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.ZOMBIE_HORSE.equals(entityType)){
-            url = new URL( part + "d22950f2d3efddb18de86f8f55ac518dce73f12a6e0f8636d551d8eb480ceec");
-            playerTextures.setSkin(url);
-        }
-        else if(EntityType.SKELETON_HORSE.equals(entityType)){
-            url = new URL( part + "47effce35132c86ff72bcae77dfbb1d22587e94df3cbc2570ed17cf8973a");
-            playerTextures.setSkin(url);
-        }
-        return playerTextures;
-    }
 }
