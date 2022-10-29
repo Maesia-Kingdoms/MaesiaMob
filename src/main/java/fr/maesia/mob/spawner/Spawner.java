@@ -276,7 +276,7 @@ public class Spawner {
         int turnNext = turn+1;
         Random dice = new Random();
         int x = dice.nextInt(getLocation().getBlockX() - getRadius(), getLocation().getBlockX() + getRadius());
-        int y =getLocation().getBlockY();
+        int y = dice.nextInt(getLocation().getBlockY() - getRadius(), getLocation().getBlockY()+ getRadius());
         int z = dice.nextInt(getLocation().getBlockZ() - getRadius(), getLocation().getBlockZ() + getRadius());
         Location check = new Location(getLocation().getWorld(), x, y,z);
         Block cblock = Objects.requireNonNull(check.getWorld()).getBlockAt(x, y-1, z);
