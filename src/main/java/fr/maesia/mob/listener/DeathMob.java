@@ -50,7 +50,6 @@ public class DeathMob implements Listener {
             UUID idSpawner = UUID.fromString(keySpawner);
             Spawner spawner = Spawner.getId(idSpawner);
             if(spawner != null) spawner.getMobsSpawn().remove(e.getEntity().getUniqueId());
-
         }
 
 
@@ -83,9 +82,6 @@ public class DeathMob implements Listener {
         }
 
     }
-
-
-
 
     private static void onDropsLoot(Location location, Mobs mobs, int proba, int  bonus){
         Random random = new Random();

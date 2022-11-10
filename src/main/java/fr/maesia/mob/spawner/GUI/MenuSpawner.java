@@ -317,7 +317,6 @@ public class MenuSpawner {
                 .getItemStack();
     }
     public static ItemStack onLeft(int page){
-
         int result = Math.max(page-1, 0);
         String pageString = ChatColor.GREEN +"Page "+result;
         if (result <1) pageString = ChatColor.RED+"Première page";

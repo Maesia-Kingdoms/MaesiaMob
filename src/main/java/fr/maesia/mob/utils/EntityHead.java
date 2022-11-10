@@ -123,7 +123,7 @@ public enum EntityHead {
         PlayerTextures playerTextures = playerProfile.getTextures();
         URL url;
         url = new URL(getUrlTexture());
-        playerTextures.setCape(url);
+        playerTextures.setSkin(url);
         return playerTextures;
     }
 

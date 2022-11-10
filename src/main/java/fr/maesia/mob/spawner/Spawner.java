@@ -8,7 +8,6 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -216,6 +215,7 @@ public class Spawner {
     }
 
     public void getEntitiesAroundPoint() {
+        updateList();
         for (Entity entity : Objects.requireNonNull(getLocation().getWorld()).getEntities()) {
             if (entity.getWorld() != getLocation().getWorld()) continue;
             if (entity instanceof Player && ((Player) entity).getGameMode().equals(GameMode.SPECTATOR)) continue; //spectators OFF
@@ -230,6 +230,15 @@ public class Spawner {
             }
         }
     }
+
+    private void updateList(){
+        Set<UUID> list = new HashSet<>();
+        for(UUID uuid : getMobsSpawn()){
+            Entity entity =  Bukkit.getEntity(uuid);
+            if (entity == null) list.add(uuid);
+        }
+        getMobsSpawn().removeAll(list);
+    }
     public static HashSet<Material> bad_blocks = new HashSet<>();
 
     static {
@@ -243,8 +252,6 @@ public class Spawner {
         Random dice = new Random();
         int count = getSpawnMin();
         if (getSpawnMin() != getSpawnMax()) count = dice.nextInt(getSpawnMin(), getSpawnMax());
-        Bukkit.broadcastMessage("Count: " + count);
-
         for(int i = 0; i  < count; i++){
             Mobs mobs = randomMobs();
             if (mobs == null) return;
@@ -276,7 +283,7 @@ public class Spawner {
         int turnNext = turn+1;
         Random dice = new Random();
         int x = dice.nextInt(getLocation().getBlockX() - getRadius(), getLocation().getBlockX() + getRadius());
-        int y = dice.nextInt(getLocation().getBlockY() - getRadius(), getLocation().getBlockY()+ getRadius());
+        int y = dice.nextInt(getLocation().getBlockY() -(getRadius()/5), getLocation().getBlockY()+ (getRadius()/2));
         int z = dice.nextInt(getLocation().getBlockZ() - getRadius(), getLocation().getBlockZ() + getRadius());
         Location check = new Location(getLocation().getWorld(), x, y,z);
         Block cblock = Objects.requireNonNull(check.getWorld()).getBlockAt(x, y-1, z);

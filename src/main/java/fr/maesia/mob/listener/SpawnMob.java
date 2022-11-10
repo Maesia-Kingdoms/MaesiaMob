@@ -17,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -116,6 +117,28 @@ public class SpawnMob implements Listener {
         LivingEntity newmob = (LivingEntity) entity;
         SpawnMob.onCustomMob(newmob, mobs.getRank().getColor() + mobs.getName(), entity.getUniqueId(), mobs.getHealth(), mobs.getDamage(), mobs.getSpeed(), mobs.getAttackspeed());
 
+        if(newmob instanceof Horse g){
+            g.setAware(true);
+            g.setDomestication(0);
+            g.setAI(true);
+            g.setTamed(true);
+        }else if(newmob instanceof  SkeletonHorse g){
+            g.setDomestication(0);
+            g.setAware(true);
+            g.setAI(true);
+            g.setTamed(true);
+        }else if(newmob instanceof ZombieHorse g){
+            g.setAware(true);
+            g.setDomestication(0);
+            g.setAI(true);
+            g.setTamed(true);
+        }else if (newmob instanceof Pillager g){
+            g.setAware(true);
+            g.setAI(true);
+        }else if (newmob instanceof Monster g){
+            g.setAware(true);
+            g.setAI(true);
+        }
         if (mobs.getEntityType().equals(EntityType.PILLAGER) || mobs.getEntityType().equals( EntityType.GIANT)){
             CombatsMobs.Combatreact.put(entity.getUniqueId(), mobs);
         }
@@ -128,12 +151,10 @@ public class SpawnMob implements Listener {
         ((LivingEntity) entity).getEquipment().setItemInOffHand(mobs.getOffMand());
 
         if (mobs.getEffectMobsSpawn().isActif()) {
-            PotionEffect potionEffect = new PotionEffect(mobs.getEffectMobsSpawn().getPotionEffect(), mobs.getEffectMobsSpawn().getDuration(), mobs.getEffectMobsSpawn().getPower(), false, false);
-            if (mobs.getEffectMobsSpawn().getDuration() > 0) {
-                ((LivingEntity) entity).addPotionEffect(potionEffect.getType().createEffect(mobs.getEffectMobsSpawn().getDuration() * 20, mobs.getEffectMobsSpawn().getPower() - 1));
-            } else {
-                ((LivingEntity) entity).addPotionEffect(potionEffect.getType().createEffect(99999999 * 20, mobs.getEffectMobsSpawn().getPower() - 1));
-            }
+
+            int duration = mobs.getEffectMobsSpawn().getDuration();
+            if (mobs.getEffectMobsSpawn().getDuration() <= 0)  duration = 99999999;
+            ((LivingEntity) entity).addPotionEffect( new PotionEffect(mobs.getEffectMobsSpawn().getPotionEffect(),duration , mobs.getEffectMobsSpawn().getPower(), false, false));
 
         }
         if (mobs.getPassager() != null){
