@@ -53,7 +53,7 @@ public class DeathMob implements Listener {
         }
 
 
-        DeathCustomMobEvent deathCustomMobEvent = new DeathCustomMobEvent(mobs, killer, mobs.getLoots(), drops, proba  , e.getEntity(), e.getEntityType());
+        DeathCustomMobEvent deathCustomMobEvent = new DeathCustomMobEvent(mobs, killer, mobs.getLoots(), drops, proba, e.getEntity(), e.getEntityType());
         Bukkit.getServer().getPluginManager().callEvent(deathCustomMobEvent);
         if(deathCustomMobEvent.isCancelled()) return;
 

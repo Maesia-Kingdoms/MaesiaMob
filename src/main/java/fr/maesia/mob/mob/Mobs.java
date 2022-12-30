@@ -5,6 +5,7 @@ import fr.maesia.mob.MaesiaMob;
 import fr.maesia.mob.mob.ppe.PotionEffectMobs;
 import fr.maesia.mob.mob.rangs.Rang;
 import fr.maesia.mob.mob.rangs.RangsLoots;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
@@ -180,6 +181,10 @@ public class Mobs {
             }
         }
         return null;
+    }
+
+    public static boolean getMobsCustom(UUID uuid){
+        return mobsListUuid.contains(uuid);
     }
 
     public static void removeMobs(Mobs mobs){

@@ -6,7 +6,7 @@
 
     <groupId>fr.maesia.mob</groupId>
     <artifactId>maesia-mob</artifactId>
-    <version>1.7.1</version>
+    <version>1.7.4</version>
     <packaging>jar</packaging>
 
     <name>MaesiaMob</name>
@@ -22,7 +22,7 @@
 
     <organization>
         <name>Maesia-Kingdoms</name>
-        <url>https://github.com/Maesia-Kingdomse</url>
+        <url>https://github.com/Maesia-Kingdoms</url>
     </organization>
 
     <developers>
