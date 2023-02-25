@@ -57,7 +57,10 @@ public final class MaesiaMob extends JavaPlugin {
         // Plugin startup logic
 
         //LoadCustom entity
+        getLogger().info("Loaded Mob Customs");
         LoadUnLoad.onLoad();
+
+        getLogger().info("Loaded Spawner Customs");
         LoadUnLoad.onLoadEntityCustom();
 
 

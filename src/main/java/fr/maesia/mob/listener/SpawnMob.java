@@ -139,7 +139,9 @@ public class SpawnMob implements Listener {
             g.setAware(true);
             g.setAI(true);
         }
-        if (mobs.getEntityType().equals(EntityType.PILLAGER) || mobs.getEntityType().equals( EntityType.GIANT)){
+
+
+        if (mobs.getEntityType().equals(EntityType.PILLAGER) || mobs.getEntityType().equals(EntityType.GIANT)){
             CombatsMobs.Combatreact.put(entity.getUniqueId(), mobs);
         }
 
@@ -168,10 +170,6 @@ public class SpawnMob implements Listener {
         }
         return entity;
     }
-
-
-
-
 
     public static boolean getBiomeAll(List<String> all, String biome){
       if (all.contains("All Nether")){

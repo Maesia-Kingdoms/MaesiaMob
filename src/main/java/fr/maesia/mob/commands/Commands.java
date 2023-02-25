@@ -103,6 +103,8 @@ public class Commands implements TabExecutor {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        Mobs.mobsListUuid.clear();
+                        Mobs.mobsList.clear();
                         LoadUnLoad.onLoad();
                         LoadUnLoad.onLoadEntityCustom();
                         player.sendMessage(Messages.getPrefix()+ChatColor.GREEN+"Reload completed");

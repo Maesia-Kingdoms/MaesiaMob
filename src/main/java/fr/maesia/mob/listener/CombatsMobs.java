@@ -35,20 +35,16 @@ public class CombatsMobs implements Listener {
         }
 
         if(!e.getDamager().getPersistentDataContainer().has(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING)) return;
-        String key =  e.getEntity().getPersistentDataContainer().get(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING);
+        String key = e.getDamager().getPersistentDataContainer().get(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING);
         if(key == null) return;
         UUID uuid = UUID.fromString(key);
         Mobs mobs = Mobs.getMobs(uuid);
         if(mobs == null)return;
-
-        if( mobs.getEffectMobsDamage().isActif() && e.getEntity() instanceof Player){
-            Player victim = (Player) e.getEntity();
-
+        if(mobs.getEffectMobsDamage().isActif() && e.getEntity() instanceof Player victim){
             int time = mobs.getEffectMobsDamage().getDuration();
             PotionEffect potionEffect = new PotionEffect(mobs.getEffectMobsDamage().getPotionEffect(),time , mobs.getEffectMobsDamage().getPower(), false, false);
             if (time > -1 ){
                 victim.addPotionEffect(potionEffect.getType().createEffect(time*20, mobs.getEffectMobsDamage().getPower()-1));
-
             }else {
                 victim.addPotionEffect(potionEffect.getType().createEffect(99999999*20, mobs.getEffectMobsDamage().getPower()-1));
             }

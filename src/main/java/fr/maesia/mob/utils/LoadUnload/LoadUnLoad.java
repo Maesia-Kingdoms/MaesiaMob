@@ -76,7 +76,7 @@ public class LoadUnLoad {
             configuration.set(m+"."+mobs.getName()+".HauteurMax", mobs.getHeight_max());
             configuration.set(m+"."+mobs.getName()+".HauteurMin", mobs.getHeight_min());
             configuration.set(m+"."+mobs.getName()+".World", mobs.getWorldspawn());
-            configuration.set(m+"."+mobs.getName()+".Monture", mobs.getPassager());
+            configuration.set(m+"."+mobs.getName()+".Monture", mobs.getPassager().toString());
             unloadbackpack(Objects.requireNonNull(configuration.createSection(m+"."+mobs.getName()+".Helmet")), mobs.getHelmet());
             unloadbackpack(Objects.requireNonNull(configuration.createSection(m+"."+mobs.getName()+".Chestplate")), mobs.getChestplate());
             unloadbackpack(Objects.requireNonNull(configuration.createSection(m+"."+mobs.getName()+".Leggings")), mobs.getLeggings());
@@ -122,6 +122,7 @@ public class LoadUnLoad {
 
         }
         configuration.save(file);
+
     }
 
     private static void unloadbackpack(ConfigurationSection section, ItemStack itemStack){
@@ -151,8 +152,9 @@ public class LoadUnLoad {
         if (!file.exists()) return;
         YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
         String m = "Mobs";
-        if (!configuration.contains(m+".")) return;
+        if (configuration.getConfigurationSection(m+".") == null) return;
         for (String key : Objects.requireNonNull(configuration.getConfigurationSection(m + ".")).getKeys(false)) {
+
             UUID uuid = UUID.fromString(Objects.requireNonNull(configuration.getString(m + "." + key + ".Id")));
             Mobs mobs = new Mobs(EntityType.valueOf(configuration.getString(m + "." + key + ".Type")), key, uuid);
             mobs.setRank(Rang.valueOf(configuration.getString(m + "." + key + ".Rank")));
@@ -222,7 +224,7 @@ public class LoadUnLoad {
                     mobs.getLoots().put(it, RangsLoots.valueOf(configuration.getString(m + "." + mobs.getName() + ".Loots." + keyb + ".Rangs")));
                 }
             }
-
+            MaesiaMob.getInstance().getLogger().info("Chargement terminer pour le mob "+ mobs.getName());
         }
     }
 
