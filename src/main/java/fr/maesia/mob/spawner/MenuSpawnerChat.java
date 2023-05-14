@@ -13,6 +13,7 @@ public class MenuSpawnerChat implements Listener {
 
 
         //Spawner
+        if (e.getPlayer().getPersistentDataContainer().isEmpty())return;
         if (PlayerData.hasPersitentDataSring(e.getPlayer(), "Radius")) MenuEditSpawner.chatEditSpawnerRadiusEdit(e);
         if (PlayerData.hasPersitentDataSring(e.getPlayer(), "Limit")) MenuEditSpawner.chatEditSpawnerLimitEdit(e);
         if (PlayerData.hasPersitentDataSring(e.getPlayer(), "SpawnMin")) MenuEditSpawner.chatEditSpawnMinEdit(e);

@@ -216,6 +216,7 @@ public class Spawner {
 
     public void getEntitiesAroundPoint() {
         updateList();
+        if(getLocation().getWorld() == null || getLocation().getWorld().getEntities().isEmpty())return;
         for (Entity entity : Objects.requireNonNull(getLocation().getWorld()).getEntities()) {
             if (entity.getWorld() != getLocation().getWorld()) continue;
             if (entity instanceof Player && ((Player) entity).getGameMode().equals(GameMode.SPECTATOR)) continue; //spectators OFF

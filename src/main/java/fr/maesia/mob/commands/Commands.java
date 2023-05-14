@@ -28,8 +28,7 @@ public class Commands implements TabExecutor {
 
     @Override
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             GUI gui = new GUI();
             if (player.isOp()){
                 if (command.getName().equalsIgnoreCase("MaesiaMob")) {

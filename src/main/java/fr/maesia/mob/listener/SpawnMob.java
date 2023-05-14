@@ -17,7 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -31,19 +30,15 @@ public class SpawnMob implements Listener {
         Random random = new Random();
 
         //filtre des mobs : check le type, Le rang & le biome
-        for (Mobs m : Mobs.mobsList) {
-            if (m.getRank().equals(Rang.randomRang()) && (m.getBiomespawn().contains("All") || m.getBiomespawn().contains(e.getLocation().getBlock().getBiome().name()) || getBiomeAll(m.getBiomespawn(), e.getLocation().getBlock().getBiome().name())) && (m.getHeight_max() <= e.getLocation().getBlockY() && m.getHeight_min() >= e.getLocation().getBlockY()) && (m.getWorldspawn().contains("All") || m.getWorldspawn().contains(Objects.requireNonNull(e.getLocation().getWorld()).getName()) || getWorldAll(m.getWorldspawn(), e.getLocation().getWorld().getEnvironment()) ) ){
-                mobsList.add(m);
-            }
-        }
-        if (mobsList.isEmpty()) return;
-        if (random.nextFloat() > 0.15F){
-            return;
-        }
+        for (Mobs m : Mobs.mobsList)  if  (isSpawnable(m, e.getLocation())) mobsList.add(m);
+
+
+        //vérification de la liste si vide return ou si le dée aux dessus de 15(15% en gros) return
+        if (mobsList.isEmpty()|| random.nextFloat() > 0.15F) return;
+
         e.setCancelled(true);
         int dice = random.nextInt(mobsList.size());
         Mobs m = mobsList.get(dice);
-        MaesiaMob.getInstance().getLogger().info("Tentative de spawn " +m.getName());
 
         onSpawnMobs(m, 1, e.getLocation());
 
@@ -108,7 +103,10 @@ public class SpawnMob implements Listener {
 
     private static Entity onMobs(Mobs mobs, int count,Location loc) {
 
+        MaesiaMob.getInstance().getLogger().info("Spawn du mobs "+mobs.getName()+" en X:"+loc.getBlockX()+" Y:"+loc.getBlockY()+" Z:"+loc.getBlockZ());
+
         Entity entity = Objects.requireNonNull(loc.getWorld()).spawnEntity(loc, mobs.getEntityType());
+
 
         entity.getPersistentDataContainer().set(new NamespacedKey(MaesiaMob.getInstance(), "idMob"), PersistentDataType.STRING, mobs.getId().toString());
 
@@ -138,6 +136,8 @@ public class SpawnMob implements Listener {
         }else if (newmob instanceof Monster g){
             g.setAware(true);
             g.setAI(true);
+        }else if (newmob instanceof Zombie g){
+            g.setAdult();
         }
 
 
@@ -187,6 +187,20 @@ public class SpawnMob implements Listener {
       }
         return false;
     }
+
+    public static boolean isSpawnable(Mobs mobs, Location location){
+        if (!mobs.getRank().equals(Rang.randomRang()))return false;
+
+        if (mobs.getBiomespawn().contains("All") || mobs.getBiomespawn().contains(location.getBlock().getBiome().name()) || getBiomeAll(mobs.getBiomespawn(), location.getBlock().getBiome().name())){
+            if (location.getBlockY() <= mobs.getHeight_max() && location.getBlockY() >= mobs.getHeight_min() ) {
+                return mobs.getWorldspawn().contains("All") || mobs.getWorldspawn().contains(Objects.requireNonNull(location.getWorld()).getName()) || getWorldAll(mobs.getWorldspawn(), location.getWorld().getEnvironment());
+            }
+            return false;
+        }
+        return false;
+    }
+
+
 
     public static boolean getWorldAll(List<String> all, World.Environment typeWorld){
         if (all.contains("All Nether")){

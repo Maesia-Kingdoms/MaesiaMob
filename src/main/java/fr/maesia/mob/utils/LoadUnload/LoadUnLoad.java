@@ -76,7 +76,7 @@ public class LoadUnLoad {
             configuration.set(m+"."+mobs.getName()+".HauteurMax", mobs.getHeight_max());
             configuration.set(m+"."+mobs.getName()+".HauteurMin", mobs.getHeight_min());
             configuration.set(m+"."+mobs.getName()+".World", mobs.getWorldspawn());
-            configuration.set(m+"."+mobs.getName()+".Monture", mobs.getPassager().toString());
+            if (mobs.getPassager() != null) configuration.set(m+"."+mobs.getName()+".Monture", mobs.getPassager().toString());
             unloadbackpack(Objects.requireNonNull(configuration.createSection(m+"."+mobs.getName()+".Helmet")), mobs.getHelmet());
             unloadbackpack(Objects.requireNonNull(configuration.createSection(m+"."+mobs.getName()+".Chestplate")), mobs.getChestplate());
             unloadbackpack(Objects.requireNonNull(configuration.createSection(m+"."+mobs.getName()+".Leggings")), mobs.getLeggings());
@@ -117,9 +117,6 @@ public class LoadUnLoad {
                     count++;
                 }
             }
-
-
-
         }
         configuration.save(file);
 
